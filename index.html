@@ -713,6 +713,9 @@
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+  // ==================== DETECCIÓN DE MÓVIL ====================
+  const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) || window.innerWidth < 768;
+
   const modelConfigs = [
     {
       name: 'Kawasaki',
@@ -759,7 +762,9 @@
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // Reducir la densidad de píxeles en móviles para aligerar la GPU
+  const maxPixelRatio = isMobile ? 1.5 : 2;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.6;
@@ -767,6 +772,7 @@
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
 
+  // ==================== LUCES (LIGERAS EN MÓVIL) ====================
   const ambientLight = new THREE.AmbientLight('#ffffff', 2.5);
   scene.add(ambientLight);
   const hemisphereLight = new THREE.HemisphereLight('#b1e1ff', '#1a1a2e', 1.8);
@@ -775,7 +781,9 @@
   const keyLight = new THREE.DirectionalLight('#ffffff', 6);
   keyLight.position.set(4, 5, 6);
   keyLight.castShadow = true;
-  keyLight.shadow.mapSize.set(1024, 1024);
+  // Mapa de sombras más pequeño en móvil
+  const shadowSize = isMobile ? 512 : 1024;
+  keyLight.shadow.mapSize.set(shadowSize, shadowSize);
   keyLight.shadow.camera.near = 0.5;
   keyLight.shadow.camera.far = 30;
   keyLight.shadow.camera.left = -7;
@@ -784,17 +792,20 @@
   keyLight.shadow.camera.bottom = -7;
   scene.add(keyLight);
 
-  const fillLight = new THREE.DirectionalLight('#00ff41', 2.5);
-  fillLight.position.set(-3, 1, -2);
-  scene.add(fillLight);
+  // Luces decorativas: se desactivan en móvil para no sobrecargar la GPU
+  if (!isMobile) {
+    const fillLight = new THREE.DirectionalLight('#00ff41', 2.5);
+    fillLight.position.set(-3, 1, -2);
+    scene.add(fillLight);
 
-  const accentRimLight = new THREE.PointLight('#00ff41', 50, 8);
-  accentRimLight.position.set(-1.5, 2, -3);
-  scene.add(accentRimLight);
+    const accentRimLight = new THREE.PointLight('#00ff41', 50, 8);
+    accentRimLight.position.set(-1.5, 2, -3);
+    scene.add(accentRimLight);
 
-  const backLight = new THREE.PointLight('#00ff41', 25, 7);
-  backLight.position.set(2, -0.2, -4);
-  scene.add(backLight);
+    const backLight = new THREE.PointLight('#00ff41', 25, 7);
+    backLight.position.set(2, -0.2, -4);
+    scene.add(backLight);
+  }
 
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(15, 15),
@@ -882,7 +893,9 @@
     nextBtn.style.color = color;
     prevBtn.style.borderColor = color;
     nextBtn.style.borderColor = color;
-    accentRimLight.color.set(color);
+    if (!isMobile) {
+      accentRimLight.color.set(color);
+    }
     ctaButton.style.setProperty('--cta-color', color);
   }
 
@@ -987,14 +1000,6 @@
         description: 'Somos el escenario donde la inmensidad del cielo intenta comprender la finitud de la tierra. Caminamos por el asfalto llevando nuestras propias alas a cuestas, buscando en el ruido de la ciudad un silencio que nos explique quiénes somos.',
         instagram: 'https://www.instagram.com/p/DX40QHBlS-bJlvESWB8OvOO4_SriiB6uu9CZQA0/?igsh=cHZ0MHVhaGJyY2Q5',
         src: 'dv.jpeg',
-        alt: 'Modelo'
-      },
-      {
-        category: 'motos',
-        title: 'MT 15',
-        description: 'La belleza de la yamaha mt15',
-        instagram: 'https://www.instagram.com/p/DYMA7OVleEsdom25TCbq4aAirMiWMIePb2GF640/?igsh=Y200MGExdzB0cXR5',
-        src: 'mt.jpg',
         alt: 'Modelo'
       },
       {
