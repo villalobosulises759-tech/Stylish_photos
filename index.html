@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Stylish Photos | Sesiones de Fotografía Premium</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-deep: #050508;
+      --bg-glass: rgba(8, 8, 16, 0.75);
+      --neon-green: #00ff41;
+      --neon-green-glow: rgba(0, 255, 65, 0.55);
+      --text-primary: #f0f0f5;
+      --text-secondary: #b0b0bb;
+      --text-muted: #6b6b7a;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-neon: rgba(0, 255, 65, 0.35);
+      --font-display: 'Orbitron', 'Montserrat', sans-serif;
+      --font-body: 'Montserrat', 'Helvetica Neue', sans-serif;
+      --transition-smooth: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: radial-gradient(ellipse at 50% 35%, #0f0f1a 0%, #07070c 55%, #020204 100%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    }
+
+    /* ========== NAVBAR ========== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 2.5rem;
+      background: var(--bg-glass);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+    }
+
+    .navbar__logo {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #ffffff;
+      text-decoration: none;
+      display: flex;
+      align-items: baseline;
+      gap: 0.2rem;
+    }
+    .navbar__logo span { color: var(--neon-green); text-shadow: 0 0 15px var(--neon-green-glow); font-weight: 900; }
+
+    .navbar__links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .navbar__link {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      position: relative;
+      padding: 0.4rem 0;
+      transition: var(--transition-smooth);
+    }
+    .navbar__link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 100%;
+      height: 2px;
+      background: var(--neon-green);
+      box-shadow: 0 0 10px var(--neon-green-glow);
+      transition: transform 0.3s ease;
+    }
+    .navbar__link:hover,
+    .navbar__link--active { color: var(--neon-green); text-shadow: 0 0 12px var(--neon-green-glow); }
+    .navbar__link:hover::after,
+    .navbar__link--active::after { transform: translateX(-50%) scaleX(1); }
+
+    .navbar__search-wrapper { position: relative; }
+    .navbar__search {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .navbar__search svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; }
+    .navbar__search:hover { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green-glow); }
+
+    .search-dropdown {
+      position: absolute;
+      top: calc(100% + 1rem);
+      right: 0;
+      background: rgba(10, 10, 20, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-neon);
+      border-radius: 12px;
+      padding: 1rem 0.8rem;
+      min-width: 220px;
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.2), 0 10px 30px rgba(0,0,0,0.7);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      z-index: 200;
+    }
+    .search-dropdown--visible { opacity: 1; visibility: visible; transform: translateY(0); }
+
+    .search-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 0.5rem 0.7rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      margin-bottom: 0.8rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .search-input:focus {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green-glow);
+    }
+    .search-input::placeholder {
+      color: var(--text-muted);
+      font-family: var(--font-body);
+    }
+
+    .search-dropdown__title {
+      font-family: var(--font-display);
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      padding: 0 0.2rem;
+    }
+    .search-dropdown__category {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .search-dropdown__category:hover { background: rgba(0, 255, 65, 0.1); color: var(--neon-green); }
+    .search-dropdown__category--all { color: var(--neon-green); font-weight: 600; border-bottom: 1px solid var(--border-subtle); margin-bottom: 0.4rem; padding-bottom: 0.6rem; }
+
+    .navbar__specs {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .navbar__specs span { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.4; }
+    .navbar__specs strong { font-weight: 700; color: #fff; font-size: 0.7rem; }
+    .navbar__specs i { font-style: normal; color: var(--text-muted); font-family: var(--font-body); font-size: 0.55rem; }
+    .navbar__specs-divider { width: 1px; height: 18px; background: var(--border-subtle); }
+
+    /* ========== HERO ========== */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding-top: 80px;
+    }
+    .hero__canvas-container { position: absolute; inset: 0; z-index: 2; cursor: grab; }
+    .hero__canvas-container:active { cursor: grabbing; }
+    .hero__canvas-container canvas { display: block; width: 100% !important; height: 100% !important; }
+
+    .hero__overlay {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100%;
+      pointer-events: none;
+      padding-bottom: 3rem;
+    }
+    .hero__overlay > * { pointer-events: all; }
+
+    .hero__brand {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .hero__brand-name {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      color: #fff;
+      text-shadow: 0 0 45px rgba(0, 255, 65, 0.25), 0 0 90px rgba(0,0,0,0.7);
+      margin-bottom: 0.4rem;
+    }
+
+    .interaction-hint {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      pointer-events: none;
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      opacity: 0.65;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: hint-fade 4s ease-in-out infinite;
+    }
+    .interaction-hint__icon { width: 18px; height: 18px; border: 1.5px solid var(--text-muted); border-radius: 50%; position: relative; animation: hint-rotate 3s ease-in-out infinite; }
+    .interaction-hint__icon::after { content: ''; position: absolute; top: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%; }
+    @keyframes hint-fade { 0%,100%{ opacity:0.3; } 50%{ opacity:0.9; } }
+    @keyframes hint-rotate { 0%,100%{ transform: rotate(0deg); } 50%{ transform: rotate(25deg); } }
+
+    /* Botones del carrusel */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-neon);
+      color: var(--neon-green);
+      font-size: 2rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+      transition: all 0.3s;
+      opacity: 0.7;
+      pointer-events: all;
+      line-height: 1;
+    }
+    .carousel-btn:hover {
+      background: rgba(0, 255, 65, 0.2);
+      box-shadow: 0 0 20px var(--neon-green-glow);
+      opacity: 1;
+    }
+    .carousel-btn--prev { left: 1.2rem; }
+    .carousel-btn--next { right: 1.2rem; }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 16%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.7rem;
+      z-index: 5;
+    }
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .carousel-dot--active {
+      background: var(--neon-green);
+      box-shadow: 0 0 12px var(--neon-green-glow);
+    }
+
+    /* Botón CTA */
+    .cta-button {
+      --cta-color: var(--neon-green);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--cta-color);
+      color: #0a0a0a;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-decoration: none;
+      text-transform: uppercase;
+      padding: 0.9rem 2.5rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      position: relative;
+      z-index: 10;
+      transition: all 0.35s ease;
+      box-shadow: 0 0 30px var(--cta-color), 0 0 70px rgba(0, 255, 65, 0.2), 0 10px 35px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+    .cta-button::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 53px;
+      border: 2px solid var(--cta-color);
+      opacity: 0.5;
+      animation: cta-pulse 2.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes cta-pulse { 0%,100%{ opacity:0.3; transform:scale(1); } 50%{ opacity:0.9; transform:scale(1.04); } }
+    .cta-button:hover {
+      background: var(--cta-color);
+      filter: brightness(1.1);
+      box-shadow: 0 0 50px var(--cta-color), 0 0 100px rgba(0,255,65,0.4);
+      transform: translateY(-4px);
+    }
+    .cta-button:active { transform: translateY(0) scale(0.97); }
+
+    /* ========== GALERÍA ========== */
+    .gallery-section { padding: 6rem 2rem 3rem; position: relative; z-index: 1; }
+    .gallery-section__header { text-align: center; margin-bottom: 2rem; }
+    .gallery-section__title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; letter-spacing: 0.25em; color: #fff; text-transform: uppercase; margin-bottom: 0.8rem; }
+    .gallery-section__line { display: block; width: 70px; height: 2px; background: var(--neon-green); margin: 0 auto; box-shadow: 0 0 14px var(--neon-green-glow); border-radius: 1px; }
+
+    .filter-bar { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .filter-btn {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: var(--transition-smooth);
+    }
+    .filter-btn:hover { border-color: var(--border-neon); color: var(--neon-green); }
+    .filter-btn--active { background: rgba(0, 255, 65, 0.15); border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.4rem; max-width: 1350px; margin: 0 auto; }
+    .gallery-grid__item {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #0a0a12;
+      border: 1px solid var(--border-subtle);
+      aspect-ratio: 3 / 4;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      display: block;
+      text-decoration: none;
+    }
+    .gallery-grid__item--hidden { opacity: 0; transform: scale(0.9); pointer-events: none; position: absolute; visibility: hidden; }
+    .gallery-grid__item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.55s cubic-bezier(0.23, 1, 0.32, 1), filter 0.4s;
+      filter: brightness(0.85) saturate(0.9);
+    }
+    .gallery-grid__item:hover { border-color: var(--border-neon); box-shadow: 0 0 30px rgba(0, 255, 65, 0.25), 0 12px 35px rgba(0,0,0,0.6); transform: translateY(-6px); z-index: 5; }
+    .gallery-grid__item:hover img { transform: scale(1.07); filter: brightness(1.08) saturate(1.15); }
+
+    .item-category {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      background: rgba(0, 255, 65, 0.2);
+      backdrop-filter: blur(5px);
+      color: var(--neon-green);
+      font-family: var(--font-display);
+      font-size: 0.5rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-neon);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .gallery-grid__item:hover .item-category { opacity: 1; }
+
+    .gallery-empty { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-family: var(--font-display); font-size: 0.8rem; letter-spacing: 0.15em; padding: 3rem; display: none; }
+    .gallery-empty--visible { display: block; }
+
+    /* ========== MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s;
+      padding: 1.5rem;
+    }
+    .modal-overlay--visible { opacity: 1; visibility: visible; }
+
+    .modal-content {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-neon);
+      border-radius: 16px;
+      display: flex;
+      max-width: 1000px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0, 255, 65, 0.25);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.8rem;
+      cursor: pointer;
+      z-index: 10;
+      transition: color 0.3s;
+      line-height: 1;
+    }
+    .modal-close:hover { color: var(--neon-green); }
+
+    .modal-image {
+      flex: 1 1 55%;
+      min-height: 300px;
+      background: #0a0a12;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal-info {
+      flex: 1 1 45%;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: var(--text-primary);
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--neon-green);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 15px var(--neon-green-glow);
+    }
+
+    .modal-description {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      white-space: pre-line;
+      margin-bottom: 2rem;
+    }
+
+    .modal-instagram-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--neon-green);
+      color: #0a0a0a;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.75rem 2rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 25px var(--neon-green-glow);
+      align-self: flex-start;
+    }
+    .modal-instagram-btn:hover {
+      background: #14ff51;
+      box-shadow: 0 0 40px var(--neon-green-glow);
+      transform: translateY(-2px);
+    }
+
+    .footer { text-align: center; padding: 2.5rem; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-muted); border-top: 1px solid var(--border-subtle); margin: 0 2rem; }
+    .footer span { color: var(--neon-green); font-weight: 600; }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 1024px) {
+      .navbar { padding: 0.8rem 1.5rem; }
+      .navbar__links { gap: 1.5rem; }
+      .navbar__specs { gap: 1rem; }
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 0.8rem 1rem; justify-content: space-between; }
+      .navbar__links { order: 3; width: 100%; justify-content: center; margin-top: 0.5rem; }
+      .navbar__specs { display: none; }
+      .search-dropdown { left: 0; right: auto; }
+      .hero { padding-top: 100px; }
+      .hero__brand { top: 25%; }
+      .carousel-btn { width: 40px; height: 40px; font-size: 1.5rem; }
+      .carousel-btn--prev { left: 0.5rem; }
+      .carousel-btn--next { right: 0.5rem; }
+      .cta-button { font-size: 0.7rem; padding: 0.7rem 2rem; }
+      .interaction-hint { bottom: 14%; font-size: 0.5rem; }
+      .gallery-section { padding: 4rem 1rem 2rem; }
+      .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+      .modal-content { flex-direction: column; max-height: 95vh; }
+      .modal-image { min-height: 220px; }
+      .modal-info { padding: 1.5rem; }
+      .modal-title { font-size: 1.2rem; }
+      .footer { margin: 0 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .navbar__logo { font-size: 1rem; }
+      .navbar__link { font-size: 0.6rem; }
+      .hero__brand-name { font-size: 1.5rem; }
+      .carousel-btn { width: 35px; height: 35px; font-size: 1.2rem; }
+      .cta-button { font-size: 0.65rem; padding: 0.6rem 1.6rem; }
+      .filter-btn { font-size: 0.55rem; padding: 0.4rem 1rem; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-section__title { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <a href="#" class="navbar__logo">STYLISH<span>PHOTOS</span></a>
+  <ul class="navbar__links">
+    <li><a href="#inicio" class="navbar__link navbar__link--active">Inicio</a></li>
+    <li><a href="#portafolio" class="navbar__link">Portafolio</a></li>
+    <li class="navbar__search-wrapper">
+      <div class="navbar__search" id="searchTrigger" role="button" tabindex="0" title="Buscar">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="17" y1="17" x2="22" y2="22"/></svg>
+        <span>Buscar</span>
+      </div>
+      <div class="search-dropdown" id="searchDropdown">
+        <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre...">
+        <div class="search-dropdown__title">Filtrar por categoría</div>
+        <button class="search-dropdown__category search-dropdown__category--all" data-filter="todas">📂 Todas</button>
+        <button class="search-dropdown__category" data-filter="modelos">👤 Modelos</button>
+        <button class="search-dropdown__category" data-filter="motos">🏍️ Motos</button>
+        <button class="search-dropdown__category" data-filter="paisajes">🏞️ Paisajes</button>
+        <button class="search-dropdown__category" data-filter="carros">🚗 Carros</button>
+      </div>
+    </li>
+  </ul>
+  <div class="navbar__specs">
+    <span><strong>4K / RAW</strong><i>CALIDAD</i></span>
+    <div class="navbar__specs-divider"></div>
+    <span><strong>IPHONE</strong><i>EQUIPO</i></span>
+    <div class="navbar__specs-divider"></div>
+    <span><strong>EDICIÓN PRO</strong><i>TECNOLOGÍA</i></span>
+    <div class="navbar__specs-divider"></div>
+    <span><strong>ENTREGA 48H</strong><i>TIEMPO</i></span>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="inicio">
+    <div class="hero__canvas-container" id="threejs-container"></div>
+
+    <button class="carousel-btn carousel-btn--prev" id="prevBtn" aria-label="Modelo anterior">‹</button>
+    <button class="carousel-btn carousel-btn--next" id="nextBtn" aria-label="Modelo siguiente">›</button>
+
+    <div class="carousel-dots" id="carouselDots"></div>
+
+    <div class="hero__brand"><h1 class="hero__brand-name">STYLISH PHOTOS</h1></div>
+    <div class="interaction-hint"><span class="interaction-hint__icon"></span> Arrastra para girar</div>
+    <div class="hero__overlay">
+      <a href="https://www.instagram.com/styl.ishphotos/" target="_blank" rel="noopener noreferrer" class="cta-button" id="ctaButton">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        <span>Reservar Sesión</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="gallery-section" id="portafolio">
+    <div class="gallery-section__header">
+      <h2 class="gallery-section__title">Portafolio</h2>
+      <span class="gallery-section__line"></span>
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn filter-btn--active" data-filter="todas">Todas</button>
+      <button class="filter-btn" data-filter="modelos">👤 Modelos</button>
+      <button class="filter-btn" data-filter="motos">🏍️ Motos</button>
+      <button class="filter-btn" data-filter="paisajes">🏞️ Paisajes</button>
+      <button class="filter-btn" data-filter="carros">🚗 Carros</button>
+    </div>
+
+    <!-- La galería ahora se llena automáticamente desde JavaScript -->
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div class="gallery-empty" id="galleryEmpty">No se encontraron imágenes en esta categoría.</div>
+  </section>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-content">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-image">
+      <img id="modalImg" src="" alt="">
+    </div>
+    <div class="modal-info">
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <p class="modal-description" id="modalDescription"></p>
+      <a class="modal-instagram-btn" id="modalInstagram" href="#" target="_blank" rel="noopener noreferrer">
+        VER FOTOS
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">&copy; 2026 <span>Stylish Photos</span> · Todos los derechos reservados</footer>
+
+<script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+  const modelConfigs = [
+    {
+      name: 'Kawasaki',
+      url: './kawasaki.glb',
+      scale: 3,
+      positionY: -0.1,
+      cameraPos: [2.8, 1.2, 4.5],
+      target: [0, 0.3, 0],
+      color: '#00ff41'
+    },
+    {
+      name: 'carro',
+      url: './carro.glb',
+      scale: 0.2,
+      positionY: -0.25,
+      cameraPos: [3, 1.1, 5],
+      target: [0, 0.15, 0],
+      color: '#E0F7FF'
+    },
+    {
+      name: 'paisaje',
+      url: './paisaje.glb',
+      scale: 0.4,
+      positionY: 0.3,
+      cameraPos: [2.5, 1.5, 4.5],
+      target: [0, 0.5, 0],
+      color: '#87CEFA'
+    },
+    {
+      name: 'Camara',
+      url: './camara.glb',
+      scale: 6,
+      positionY: -0.2,
+      cameraPos: [2.8, 1.2, 4.2],
+      target: [0, 0.4, 0],
+      color: '#ffd700'
+    }
+  ];
+
+  const container = document.getElementById('threejs-container');
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 50);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.6;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  container.appendChild(renderer.domElement);
+
+  const ambientLight = new THREE.AmbientLight('#ffffff', 2.5);
+  scene.add(ambientLight);
+  const hemisphereLight = new THREE.HemisphereLight('#b1e1ff', '#1a1a2e', 1.8);
+  scene.add(hemisphereLight);
+
+  const keyLight = new THREE.DirectionalLight('#ffffff', 6);
+  keyLight.position.set(4, 5, 6);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.set(1024, 1024);
+  keyLight.shadow.camera.near = 0.5;
+  keyLight.shadow.camera.far = 30;
+  keyLight.shadow.camera.left = -7;
+  keyLight.shadow.camera.right = 7;
+  keyLight.shadow.camera.top = 7;
+  keyLight.shadow.camera.bottom = -7;
+  scene.add(keyLight);
+
+  const fillLight = new THREE.DirectionalLight('#00ff41', 2.5);
+  fillLight.position.set(-3, 1, -2);
+  scene.add(fillLight);
+
+  const accentRimLight = new THREE.PointLight('#00ff41', 50, 8);
+  accentRimLight.position.set(-1.5, 2, -3);
+  scene.add(accentRimLight);
+
+  const backLight = new THREE.PointLight('#00ff41', 25, 7);
+  backLight.position.set(2, -0.2, -4);
+  scene.add(backLight);
+
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(15, 15),
+    new THREE.MeshStandardMaterial({ color: '#0a0a10', roughness: 0.9, metalness: 0.1, transparent: true, opacity: 0.6, depthWrite: false })
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -1.8;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  const modelGroup = new THREE.Group();
+  scene.add(modelGroup);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.9;
+  controls.minDistance = 2.5;
+  controls.maxDistance = 8;
+  controls.maxPolarAngle = Math.PI * 0.7;
+  controls.minPolarAngle = Math.PI * 0.25;
+  controls.enablePan = false;
+  controls.update();
+
+  function centerModel(model, desiredY) {
+    const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
+    model.position.x = -center.x;
+    model.position.y = desiredY - center.y;
+    model.position.z = -center.z;
+  }
+
+  let currentIndex = 0;
+  const modelsCache = [];
+  const activeConfigs = modelConfigs.map(c => ({...c}));
+
+  const loader = new GLTFLoader();
+
+  function loadModel(config) {
+    return new Promise((resolve) => {
+      loader.load(
+        config.url,
+        (gltf) => {
+          const model = gltf.scene;
+          model.scale.set(config.scale, config.scale, config.scale);
+          centerModel(model, config.positionY);
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
+          resolve(model);
+        },
+        undefined,
+        (error) => {
+          console.error(`Error al cargar ${config.name}:`, error);
+          const fallback = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5),
+            new THREE.MeshStandardMaterial({ color: '#ff4444' })
+          );
+          fallback.position.y = 0.5;
+          resolve(fallback);
+        }
+      );
+    });
+  }
+
+  async function preloadModels() {
+    for (const config of activeConfigs) {
+      const model = await loadModel(config);
+      modelsCache.push(model);
+    }
+    showModel(0);
+  }
+
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dotsContainer = document.getElementById('carouselDots');
+  const ctaButton = document.getElementById('ctaButton');
+
+  function applyModelColor(color) {
+    prevBtn.style.color = color;
+    nextBtn.style.color = color;
+    prevBtn.style.borderColor = color;
+    nextBtn.style.borderColor = color;
+    accentRimLight.color.set(color);
+    ctaButton.style.setProperty('--cta-color', color);
+  }
+
+  function showModel(index) {
+    while (modelGroup.children.length > 0) modelGroup.remove(modelGroup.children[0]);
+    const model = modelsCache[index];
+    if (model) modelGroup.add(model);
+    const config = activeConfigs[index];
+    camera.position.set(...config.cameraPos);
+    controls.target.set(...config.target);
+    controls.update();
+    applyModelColor(config.color);
+    updateDots(index, config.color);
+  }
+
+  function nextModel() {
+    currentIndex = (currentIndex + 1) % activeConfigs.length;
+    showModel(currentIndex);
+  }
+
+  function prevModel() {
+    currentIndex = (currentIndex - 1 + activeConfigs.length) % activeConfigs.length;
+    showModel(currentIndex);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    const config = activeConfigs[currentIndex];
+    const model = modelsCache[currentIndex];
+    if (!model || !config) return;
+    if (e.key === 'w' || e.key === 'W') {
+      config.positionY += 0.1;
+      model.position.y = config.positionY;
+      console.log(`${config.name} positionY: ${config.positionY.toFixed(2)}`);
+    } else if (e.key === 's' || e.key === 'S') {
+      config.positionY -= 0.1;
+      model.position.y = config.positionY;
+      console.log(`${config.name} positionY: ${config.positionY.toFixed(2)}`);
+    }
+  });
+
+  function createDots() {
+    dotsContainer.innerHTML = '';
+    activeConfigs.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot';
+      dot.addEventListener('click', () => { currentIndex = i; showModel(i); });
+      dotsContainer.appendChild(dot);
+    });
+  }
+
+  function updateDots(activeIndex, color) {
+    const dots = dotsContainer.querySelectorAll('.carousel-dot');
+    dots.forEach((dot, i) => {
+      if (i === activeIndex) {
+        dot.style.backgroundColor = color;
+        dot.style.boxShadow = `0 0 12px ${color}`;
+      } else {
+        dot.style.backgroundColor = '';
+        dot.style.boxShadow = '';
+      }
+    });
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', prevModel);
+  document.getElementById('nextBtn').addEventListener('click', nextModel);
+
+  createDots();
+  preloadModels();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (modelGroup.children.length > 0) {
+      modelGroup.position.y = Math.sin(Date.now() * 0.0012) * 0.06;
+    }
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+</script>
+
+<script>
+  (() => {
+    // ==================== BASE DE DATOS DE IMÁGENES ====================
+    const galleryImages = [
+      {
+        category: 'modelos',
+        title: 'El Umbral de la Conciencia',
+        description: 'Conócete a ti mismo,la sobra es el reflejo de tu propia luz',
+        instagram: 'https://www.instagram.com/p/DYMA7OVleEsdom25TCbq4aAirMiWMIePb2GF640/?igsh=Y200MGExdzB0cXR5',
+        src: 'uli.jpeg',
+        alt: 'Modelo'
+      },
+      {
+        category: 'modelos',
+        title: 'Urban Divinity',
+        description: 'Somos el escenario donde la inmensidad del cielo intenta comprender la finitud de la tierra. Caminamos por el asfalto llevando nuestras propias alas a cuestas, buscando en el ruido de la ciudad un silencio que nos explique quiénes somos.',
+        instagram: 'https://www.instagram.com/p/DX40QHBlS-bJlvESWB8OvOO4_SriiB6uu9CZQA0/?igsh=cHZ0MHVhaGJyY2Q5',
+        src: 'dv.jpeg',
+        alt: 'Modelo'
+      },
+      {
+        category: 'motos',
+        title: 'MT 15',
+        description: 'La belleza de la yamaha mt15',
+        instagram: 'https://www.instagram.com/p/DYMA7OVleEsdom25TCbq4aAirMiWMIePb2GF640/?igsh=Y200MGExdzB0cXR5',
+        src: 'mt.jpg',
+        alt: 'Modelo'
+      },
+      {
+        category: 'motos',
+        title: 'Yamaha R15 V3',
+        description: 'Motor y Potencia\nCilindrada: 155 cc\nTipo: Monocilíndrico, 4 tiempos, SOHC, enfriado por líquido\nPotencia máxima: 19.3 hp a 10,000 rpm\nTorque máximo: 14.7 Nm a 8,500 rpm\nTecnología clave: VVA (Válvulas de Apertura Variable) para mejor respuesta en alta y baja velocidad.',
+        instagram: 'https://www.instagram.com/p/DY-CgosFcNCB2XNV3MQTbs1WvAu6qF66eAWHZY0/?igsh=aXlvNHowNWt4b2U3',
+        src: 'r15.jpeg',
+        alt: 'Moto'
+      },
+      {
+        category: 'motos',
+        title: 'PULSAR NS 160',
+        description: 'Motor y Potencia\nTipo de Motor: Monocilíndrico, 4 tiempos, SOHC (4 válvulas).\nCilindrada: 160.3 cc.\nEnfriamiento: Sistema de enfriamiento por aceite (Oil-cooled).\nPotencia Máxima: 17.2 Hp @ 9,000 rpm.\nTorque Máximo: 14.6 N.m @ 7,250 rpm.\nTransmisión: 5 velocidades.\nArranque: Eléctrico.',
+        instagram: 'https://www.instagram.com/p/DY-Fcu4lYZla3GdlDAhr31Ykfa02jDLEonIV080/?igsh=aTJlNW1lOXFseGN5',
+        src: 'pulsar.jpeg',
+        alt: 'Moto'
+      },
+      {
+        category: 'motos',
+        title: 'CB 190R',
+        description: 'Motor y Potencia\nHonda CB190R Tipo de Motor: Monocilíndrico, 4 tiempos, SOHC.\nCilindrada: 184.4 cc.\nEnfriamiento: Aire natural.\nPotencia Máxima: 17.3 Hp @ 8,500 rpm.\nTorque Máximo: 16.1 N.m @ 6,000 rpm.\nTransmisión: 5 velocidades.\nArranque: Eléctrico.',
+        instagram: 'https://www.instagram.com/p/DY-IMBGFZu1x0I8eOG03nPm_b55KcXjK7be6HA0/?igsh=MXd4Z283bXh2MWt5dg==',
+        src: 'cb.jpeg',
+        alt: 'Moto'
+      },
+      {
+        category: 'paisajes',
+        title: 'Caminando Entre La Elegancia Del Pasado Y La Grandeza Del Presente',
+        description: 'La Torre Latinoamericana es un icónico rascacielos de la Ciudad de México inaugurado en 1956. Es mundialmente famosa por ser una hazaña de la ingeniería al ser el primer edificio de gran altura construido en una zona sísmica sobre suelo inestable, logrando resistir terremotos históricos sin daños mayores.',
+        instagram: 'https://www.instagram.com/p/DY-K_SFFRXSmazYoMdj41z2fbBdyozAqJqys9Y0/?igsh=MXNtc3lvYm55eXhhaw==',
+        src: 'torre.jpeg',
+        alt: 'Paisaje'
+      },
+      {
+        category: 'paisajes',
+        title: 'Mother Nature Never Fails To Amaze',
+        description: 'LA PERMANENCIA DEL HORIZONTE ESTÁ CONSTRUIDA SOBRE LO EFÍMERO DEL CAMINO',
+        instagram: 'https://www.instagram.com/p/DY-JM13ldaGOZYSZCb1kheFkeN70MUqV-F8ZpQ0/?igsh=a3FjbnZ6cng5Z3U4',
+        src: 'ameca.jpeg',
+        alt: 'Paisaje'
+      },
+      {
+        category: 'carros',
+        title: 'Volkswagen Jetta MK7',
+        description: 'Motor: 1.4L Turbo eficiente.\nDesempeño: Ágil, con gran respuesta gracias al torque a bajas RPM.\nTecnología: Transmisiones de 6-7 velocidades, conectividad avanzada y alta seguridad.\nPerfil: Ideal para uso diario, mayor ahorro de combustible y mejor valor de reventa.',
+        instagram: 'https://www.instagram.com/styl.ishphotos/',
+        src: 'jetta.jpeg',
+        alt: 'Carro'
+      },
+      {
+        category: 'carros',
+        title: 'Opel Astra 2003',
+        description: 'Motor: 1.6L atmosférico (sin turbo).\nDesempeño: Mecánica sencilla pero limitada; requiere más esfuerzo del motor para ganar velocidad.\nTecnología: Transmisión automática de 4 velocidades de diseño antiguo.\nPerfil: Auto económico en compra pero con mayor riesgo de gastos imprevistos por su antigüedad y piezas más difíciles de conseguir.',
+        instagram: 'https://www.instagram.com/styl.ishphotos/',
+        src: 'as.jpeg',
+        alt: 'Carro'
+      }
+    ];
+
+    // ==================== ELEMENTOS DEL DOM ====================
+    const filterBar = document.getElementById('filterBar');
+    const filterButtons = filterBar.querySelectorAll('.filter-btn');
+    const dropdownButtons = document.querySelectorAll('.search-dropdown__category');
+    const galleryGrid = document.getElementById('galleryGrid');
+    const galleryEmpty = document.getElementById('galleryEmpty');
+    const searchDropdown = document.getElementById('searchDropdown');
+    const searchTrigger = document.getElementById('searchTrigger');
+    const searchInput = document.getElementById('searchInput');
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalClose = document.getElementById('modalClose');
+    const modalImg = document.getElementById('modalImg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalInstagram = document.getElementById('modalInstagram');
+    const modalContent = document.querySelector('.modal-content');
+
+    // ==================== ESTADO DE FILTROS ====================
+    let activeCategory = 'todas';
+    let searchTerm = '';
+
+    // ==================== COLOR DOMINANTE (CANVAS OCULTO) ====================
+    const colorCanvas = document.createElement('canvas');
+    const colorCtx = colorCanvas.getContext('2d');
+
+    function extractAndStoreColor(item) {
+      const img = item.querySelector('img');
+      if (!img) return;
+      if (img.complete) {
+        computeColor(img, item);
+      } else {
+        img.addEventListener('load', () => computeColor(img, item), { once: true });
+      }
+    }
+
+    function computeColor(img, item) {
+      const size = 20;
+      colorCanvas.width = size;
+      colorCanvas.height = size;
+      colorCtx.drawImage(img, 0, 0, size, size);
+      const imageData = colorCtx.getImageData(0, 0, size, size).data;
+      let r = 0, g = 0, b = 0, totalWeight = 0;
+      for (let i = 0; i < imageData.length; i += 4) {
+        const red = imageData[i];
+        const green = imageData[i+1];
+        const blue = imageData[i+2];
+        const saturation = Math.max(red, green, blue) - Math.min(red, green, blue);
+        const weight = saturation + 50;
+        r += red * weight;
+        g += green * weight;
+        b += blue * weight;
+        totalWeight += weight;
+      }
+      r = Math.round(r / totalWeight);
+      g = Math.round(g / totalWeight);
+      b = Math.round(b / totalWeight);
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      if (brightness < 80) {
+        r = Math.min(255, r + 80);
+        g = Math.min(255, g + 80);
+        b = Math.min(255, b + 80);
+      }
+      item.dataset.dominantColor = `rgb(${r},${g},${b})`;
+    }
+
+    function applyModalColor(color) {
+      modalContent.style.borderColor = color;
+      modalTitle.style.color = color;
+      modalInstagram.style.backgroundColor = color;
+      modalInstagram.style.color = '#0a0a0a';
+      modalInstagram.style.boxShadow = `0 0 25px ${color}`;
+      modalContent.style.boxShadow = `0 0 60px ${color}`;
+    }
+
+    function getDominantColorLive(img, callback) {
+      if (!img.complete) {
+        img.addEventListener('load', () => getDominantColorLive(img, callback), { once: true });
+        return;
+      }
+      const size = 20;
+      colorCanvas.width = size;
+      colorCanvas.height = size;
+      colorCtx.drawImage(img, 0, 0, size, size);
+      const imageData = colorCtx.getImageData(0, 0, size, size).data;
+      let r = 0, g = 0, b = 0, totalWeight = 0;
+      for (let i = 0; i < imageData.length; i += 4) {
+        const red = imageData[i];
+        const green = imageData[i+1];
+        const blue = imageData[i+2];
+        const saturation = Math.max(red, green, blue) - Math.min(red, green, blue);
+        const weight = saturation + 50;
+        r += red * weight;
+        g += green * weight;
+        b += blue * weight;
+        totalWeight += weight;
+      }
+      r = Math.round(r / totalWeight);
+      g = Math.round(g / totalWeight);
+      b = Math.round(b / totalWeight);
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      if (brightness < 80) {
+        r = Math.min(255, r + 80);
+        g = Math.min(255, g + 80);
+        b = Math.min(255, b + 80);
+      }
+      callback(`rgb(${r},${g},${b})`);
+    }
+
+    // ==================== CREACIÓN DE ELEMENTOS DE LA GALERÍA ====================
+    function createGalleryItem(imgData) {
+      const item = document.createElement('a');
+      item.className = 'gallery-grid__item';
+      item.href = '#';
+      item.dataset.category = imgData.category;
+      item.dataset.title = imgData.title;
+      item.dataset.description = imgData.description;
+      item.dataset.instagram = imgData.instagram || 'https://www.instagram.com/styl.ishphotos/';
+
+      const img = document.createElement('img');
+      img.src = imgData.src;
+      img.alt = imgData.alt || '';
+      img.loading = 'lazy';
+
+      const span = document.createElement('span');
+      span.className = 'item-category';
+      span.textContent = imgData.category.charAt(0).toUpperCase() + imgData.category.slice(1);
+
+      item.appendChild(img);
+      item.appendChild(span);
+      return item;
+    }
+
+    function renderGallery() {
+      galleryGrid.innerHTML = '';
+      let visibleCount = 0;
+
+      galleryImages.forEach(imgData => {
+        const matchesCategory = activeCategory === 'todas' || imgData.category === activeCategory;
+        const matchesSearch = !searchTerm || (imgData.title || '').toLowerCase().includes(searchTerm.toLowerCase());
+        if (matchesCategory && matchesSearch) {
+          const item = createGalleryItem(imgData);
+          galleryGrid.appendChild(item);
+          visibleCount++;
+        }
+      });
+
+      galleryEmpty.classList.toggle('gallery-empty--visible', visibleCount === 0);
+      filterButtons.forEach(btn => btn.classList.toggle('filter-btn--active', btn.dataset.filter === activeCategory));
+
+      // Reasignar eventos de hover, clic y colores
+      attachGalleryEvents();
+    }
+
+    // ==================== EVENTOS DE LA GALERÍA ====================
+    function attachGalleryEvents() {
+      const currentItems = document.querySelectorAll('.gallery-grid__item');
+
+      currentItems.forEach(item => {
+        // Color dominante
+        extractAndStoreColor(item);
+
+        // Hover
+        item.addEventListener('mouseenter', () => {
+          const color = item.dataset.dominantColor;
+          if (color) {
+            item.style.borderColor = color;
+            item.style.boxShadow = `0 0 30px ${color}, 0 12px 35px rgba(0,0,0,0.6)`;
+          }
+        });
+        item.addEventListener('mouseleave', () => {
+          item.style.borderColor = '';
+          item.style.boxShadow = '';
+        });
+
+        // Modal
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const img = item.querySelector('img');
+          if (!img) return;
+          modalImg.src = img.src;
+          modalTitle.textContent = item.dataset.title || '';
+          modalDescription.textContent = item.dataset.description || '';
+          modalInstagram.href = item.dataset.instagram || 'https://www.instagram.com/';
+
+          const storedColor = item.dataset.dominantColor;
+          if (storedColor) {
+            applyModalColor(storedColor);
+          } else {
+            getDominantColorLive(img, (color) => applyModalColor(color));
+          }
+          modalOverlay.classList.add('modal-overlay--visible');
+        });
+      });
+    }
+
+    // ==================== FILTROS Y BÚSQUEDA ====================
+    function applyFilter(filter) {
+      activeCategory = filter;
+      searchInput.value = '';
+      searchTerm = '';
+      renderGallery();
+    }
+
+    filterButtons.forEach(btn => btn.addEventListener('click', () => applyFilter(btn.dataset.filter)));
+
+    dropdownButtons.forEach(btn => btn.addEventListener('click', () => {
+      applyFilter(btn.dataset.filter);
+      searchDropdown.classList.remove('search-dropdown--visible');
+      document.getElementById('portafolio').scrollIntoView({ behavior: 'smooth' });
+    }));
+
+    searchInput.addEventListener('input', () => {
+      searchTerm = searchInput.value.trim();
+      renderGallery();
+      if (searchTerm) {
+        document.getElementById('portafolio').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    searchInput.addEventListener('click', (e) => e.stopPropagation());
+
+    searchTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      searchDropdown.classList.toggle('search-dropdown--visible');
+      if (searchDropdown.classList.contains('search-dropdown--visible')) {
+        searchInput.focus();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!searchTrigger.contains(e.target) && !searchDropdown.contains(e.target)) {
+        searchDropdown.classList.remove('search-dropdown--visible');
+      }
+    });
+
+    // ==================== MODAL ====================
+    modalClose.addEventListener('click', () => modalOverlay.classList.remove('modal-overlay--visible'));
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('modal-overlay--visible'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.classList.contains('modal-overlay--visible')) modalOverlay.classList.remove('modal-overlay--visible'); });
+
+    // ==================== INICIALIZAR GALERÍA ====================
+    renderGallery();
+  })();
+</script>
+</body>
+</html>
