@@ -573,6 +573,32 @@
     .footer { text-align: center; padding: 2.5rem; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-muted); border-top: 1px solid var(--border-subtle); margin: 0 2rem; }
     .footer span { color: var(--neon-green); font-weight: 600; }
 
+    /* ========== NUEVO: ESTILOS PARA MEJORAR RENDIMIENTO EN MÓVIL ========== */
+    @media (max-width: 768px) {
+      .gallery-grid__item img {
+        filter: brightness(1) saturate(1); /* eliminar filtros pesados */
+        transition: none;
+      }
+      .gallery-grid__item:hover img {
+        transform: none;
+        filter: brightness(1) saturate(1);
+      }
+      .gallery-grid__item {
+        transition: none;
+      }
+      .item-category {
+        display: none; /* ahorrar renderizado de etiqueta */
+      }
+      .load-more-btn {
+        margin-top: 1.5rem;
+        width: 100%;
+        max-width: 300px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
     /* ========== RESPONSIVE ========== */
     @media (max-width: 1024px) {
       .navbar { padding: 0.8rem 1.5rem; }
@@ -680,8 +706,8 @@
       <button class="filter-btn" data-filter="carros">🚗 Carros</button>
     </div>
 
-    <!-- La galería ahora se llena automáticamente desde JavaScript -->
     <div class="gallery-grid" id="galleryGrid"></div>
+    <button id="loadMoreBtn" class="filter-btn load-more-btn" style="display:none; margin-top:2rem;">Cargar más</button>
     <div class="gallery-empty" id="galleryEmpty">No se encontraron imágenes en esta categoría.</div>
   </section>
 </main>
@@ -713,7 +739,6 @@
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-  // ==================== DETECCIÓN DE MÓVIL ====================
   const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) || window.innerWidth < 768;
 
   const modelConfigs = [
@@ -762,7 +787,6 @@
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
-  // Reducir la densidad de píxeles en móviles para aligerar la GPU
   const maxPixelRatio = isMobile ? 1.5 : 2;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -772,7 +796,6 @@
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
 
-  // ==================== LUCES (LIGERAS EN MÓVIL) ====================
   const ambientLight = new THREE.AmbientLight('#ffffff', 2.5);
   scene.add(ambientLight);
   const hemisphereLight = new THREE.HemisphereLight('#b1e1ff', '#1a1a2e', 1.8);
@@ -781,7 +804,6 @@
   const keyLight = new THREE.DirectionalLight('#ffffff', 6);
   keyLight.position.set(4, 5, 6);
   keyLight.castShadow = true;
-  // Mapa de sombras más pequeño en móvil
   const shadowSize = isMobile ? 512 : 1024;
   keyLight.shadow.mapSize.set(shadowSize, shadowSize);
   keyLight.shadow.camera.near = 0.5;
@@ -792,7 +814,6 @@
   keyLight.shadow.camera.bottom = -7;
   scene.add(keyLight);
 
-  // Luces decorativas: se desactivan en móvil para no sobrecargar la GPU
   if (!isMobile) {
     const fillLight = new THREE.DirectionalLight('#00ff41', 2.5);
     fillLight.position.set(-3, 1, -2);
@@ -1069,6 +1090,7 @@
     const searchDropdown = document.getElementById('searchDropdown');
     const searchTrigger = document.getElementById('searchTrigger');
     const searchInput = document.getElementById('searchInput');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
 
     const modalOverlay = document.getElementById('modalOverlay');
     const modalClose = document.getElementById('modalClose');
@@ -1078,9 +1100,13 @@
     const modalInstagram = document.getElementById('modalInstagram');
     const modalContent = document.querySelector('.modal-content');
 
-    // ==================== ESTADO DE FILTROS ====================
+    // ==================== ESTADO DE FILTROS Y PAGINACIÓN ====================
     let activeCategory = 'todas';
     let searchTerm = '';
+    const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const ITEMS_PER_PAGE = 4;
+    let currentPage = 0;
+    let allFilteredItems = [];
 
     // ==================== COLOR DOMINANTE (CANVAS OCULTO) ====================
     const colorCanvas = document.createElement('canvas');
@@ -1193,49 +1219,66 @@
       return item;
     }
 
-    function renderGallery() {
+    function renderGalleryPage() {
       galleryGrid.innerHTML = '';
-      let visibleCount = 0;
+      const start = 0;
+      const end = isMobile ? (currentPage + 1) * ITEMS_PER_PAGE : allFilteredItems.length;
+      const itemsToShow = allFilteredItems.slice(start, end);
 
-      galleryImages.forEach(imgData => {
-        const matchesCategory = activeCategory === 'todas' || imgData.category === activeCategory;
-        const matchesSearch = !searchTerm || (imgData.title || '').toLowerCase().includes(searchTerm.toLowerCase());
-        if (matchesCategory && matchesSearch) {
-          const item = createGalleryItem(imgData);
-          galleryGrid.appendChild(item);
-          visibleCount++;
-        }
+      itemsToShow.forEach(imgData => {
+        galleryGrid.appendChild(createGalleryItem(imgData));
       });
 
-      galleryEmpty.classList.toggle('gallery-empty--visible', visibleCount === 0);
-      filterButtons.forEach(btn => btn.classList.toggle('filter-btn--active', btn.dataset.filter === activeCategory));
-
-      // Reasignar eventos de hover, clic y colores
+      loadMoreBtn.style.display = (isMobile && end < allFilteredItems.length) ? 'block' : 'none';
+      galleryEmpty.classList.toggle('gallery-empty--visible', allFilteredItems.length === 0);
       attachGalleryEvents();
     }
+
+    function renderGallery() {
+      allFilteredItems = galleryImages.filter(imgData => {
+        const matchesCategory = activeCategory === 'todas' || imgData.category === activeCategory;
+        const matchesSearch = !searchTerm || (imgData.title || '').toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+
+      currentPage = 0;
+      renderGalleryPage();
+      filterButtons.forEach(btn => btn.classList.toggle('filter-btn--active', btn.dataset.filter === activeCategory));
+    }
+
+    loadMoreBtn.addEventListener('click', () => {
+      currentPage++;
+      const start = currentPage * ITEMS_PER_PAGE;
+      const end = start + ITEMS_PER_PAGE;
+      const nextItems = allFilteredItems.slice(start, end);
+      nextItems.forEach(imgData => {
+        galleryGrid.appendChild(createGalleryItem(imgData));
+      });
+      attachGalleryEvents();
+      if (end >= allFilteredItems.length) loadMoreBtn.style.display = 'none';
+    });
 
     // ==================== EVENTOS DE LA GALERÍA ====================
     function attachGalleryEvents() {
       const currentItems = document.querySelectorAll('.gallery-grid__item');
 
       currentItems.forEach(item => {
-        // Color dominante
         extractAndStoreColor(item);
 
-        // Hover
-        item.addEventListener('mouseenter', () => {
-          const color = item.dataset.dominantColor;
-          if (color) {
-            item.style.borderColor = color;
-            item.style.boxShadow = `0 0 30px ${color}, 0 12px 35px rgba(0,0,0,0.6)`;
-          }
-        });
-        item.addEventListener('mouseleave', () => {
-          item.style.borderColor = '';
-          item.style.boxShadow = '';
-        });
+        if (!isMobile) {
+          item.addEventListener('mouseenter', () => {
+            const color = item.dataset.dominantColor;
+            if (color) {
+              item.style.borderColor = color;
+              item.style.boxShadow = `0 0 30px ${color}, 0 12px 35px rgba(0,0,0,0.6)`;
+            }
+          });
+          item.addEventListener('mouseleave', () => {
+            item.style.borderColor = '';
+            item.style.boxShadow = '';
+          });
+        }
 
-        // Modal
         item.addEventListener('click', (e) => {
           e.preventDefault();
           const img = item.querySelector('img');
